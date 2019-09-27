@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.AulaDSW.dto.ProductDTO;
-import com.example.AulaDSW.entities.Product;
 import com.example.AulaDSW.services.ProductService;
 
 @RestController
@@ -21,17 +20,16 @@ public class ProductResource {
 	private ProductService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Product>> findAll() {
-		List<Product> list = service.findAll();
+
 	public ResponseEntity<List<ProductDTO>> findAll() {
-		List<ProductDTO> productList = service.findAll();
-		return ResponseEntity.ok().body(productList);
+		List<ProductDTO> List = service.findAll();
+		return ResponseEntity.ok().body(List);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Product> findById(@PathVariable Long id) {
-		Product product = service.findById(id);
-		return ResponseEntity.ok().body(obj);
+	public ResponseEntity<ProductDTO> findById(@PathVariable Long id){
+		ProductDTO dto = service.findById(id);
+		return ResponseEntity.ok().body(dto);
 	}
 	
 
