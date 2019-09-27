@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.AulaDSW.dto.UserDTO;
+import com.example.AulaDSW.dto.UserInsertDTO;
 import com.example.AulaDSW.entities.User;
 import com.example.AulaDSW.repositories.UserRepository;
 import com.example.AulaDSW.services.exceptions.DatabaseException;
@@ -24,7 +25,7 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;
 	
-	public List<UserDTO> findAll() {
+	public List<User> findAll() {
 		List<User> list = repository.findAll();
 		return list.stream().map(e -> new UserDTO(e)).collect(Collectors.toList());
 	}
@@ -35,8 +36,11 @@ public class UserService {
 		return new UserDTO(entity);
 	}
 	
-	public User insert(User obj) {
-		return repository.save(obj);
+	public UserDTO insert(UserInsertDTO dto) {
+		User entity = dto.toEntity();
+		entity = repository.save(entity);
+		return new UserDTO(entity);
+		
 	}
 	
 	public void delete(Long id) {

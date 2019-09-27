@@ -1,14 +1,21 @@
 package com.example.AulaDSW.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.AulaDSW.dto.CategoryDTO;
 import com.example.AulaDSW.entities.Category;
 import com.example.AulaDSW.services.CategoryService;
 
@@ -20,16 +27,38 @@ public class CategoryResource {
 	private CategoryService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Category>> findAll() {
+	public ResponseEntity<List<Category>> findAll(){
 		List<Category> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+		return ResponseEntity.ok().body(list );
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Category> findById(@PathVariable Long id) {
-		Category obj = service.findById(id);
+	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){
+		CategoryDTO obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	@PostMapping
+	public ResponseEntity<Object> insert(@RequestBody Category obj){
+		CategoryDTO dto;
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("{id}")
+				.buildAndExpand(obj.getId()).toUri();
 
-}
+		Object newDTO = null;
+		return ResponseEntity.created(uri).body(newDTO);
+	}
+
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id){
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<CategoryDTO> update(@PathVariable Long id,@RequestBody CategoryDTO dto ){
+		dto = service.update(id, dto);
+		return ResponseEntity.ok().body(dto);
+	}
+
+
+	}
