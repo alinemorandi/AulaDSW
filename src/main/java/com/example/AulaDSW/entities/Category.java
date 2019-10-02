@@ -1,6 +1,7 @@
 package com.example.AulaDSW.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,11 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_category")
@@ -27,6 +27,9 @@ public class Category implements Serializable {
 
 	@ManyToMany(mappedBy = "categories")
 	private Set<Product> products = new HashSet<>();
+	
+	private Instant createdAt;
+	private Instant updatedAt;
 	
 	public Category() {
 		
@@ -58,6 +61,25 @@ public class Category implements Serializable {
 		return products;
 	}
 
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
+	
+	@PreUpdate
+	public void preUpdate() {
+		updatedAt = Instant.now();
+	}
+	@PrePersist
+	public void prePersist() {
+		Instant now = Instant.now();
+		updatedAt = now;
+		createdAt = now;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
