@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.AulaDSW.dto.CategoryDTO;
+import com.example.AulaDSW.dto.CategoryInsertDTO;
 import com.example.AulaDSW.entities.Category;
 import com.example.AulaDSW.repositories.CategoryRepository;
 import com.example.AulaDSW.services.exceptions.DatabaseException;
@@ -24,8 +25,8 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository repository;
 	
-	public List<Category> findAll() {
-		return repository.findAll();
+	public List<CategoryDTO> findAll() {
+		
 		List<Category> list = repository.findAll();
 		return list.stream().map(e -> new CategoryDTO(e)).collect(Collectors.toList());
 	}

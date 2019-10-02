@@ -27,8 +27,8 @@ public class CategoryResource {
 	private CategoryService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Category>> findAll(){
-		List<Category> list = service.findAll();
+	public ResponseEntity<List<CategoryDTO>> findAll(){
+		List<CategoryDTO> list = service.findAll();
 		return ResponseEntity.ok().body(list );
 	}
 	
@@ -40,7 +40,6 @@ public class CategoryResource {
 	
 	@PostMapping
 	public ResponseEntity<Object> insert(@RequestBody Category obj){
-		CategoryDTO dto;
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("{id}")
 				.buildAndExpand(obj.getId()).toUri();
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.AulaDSW.dto.OrderDTO;
-import com.example.AulaDSW.entities.Order;
+
 import com.example.AulaDSW.services.OrderService;
 
 @RestController
@@ -21,14 +21,14 @@ public class OrderResource {
 	private OrderService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Order>> findAll(){
-		List<Order> list = service.findAll();
+	public ResponseEntity<List<OrderDTO>> findAll(){
+		List<OrderDTO> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Order> findById(@PathVariable Long id){
-		Order dto = service.findById(id);
+	public ResponseEntity<OrderDTO> findById(@PathVariable Long id){
+		OrderDTO dto = service.findById(id);
 		return ResponseEntity.ok().body(dto);
 	}
 	

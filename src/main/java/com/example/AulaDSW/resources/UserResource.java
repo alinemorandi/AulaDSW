@@ -19,7 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.AulaDSW.dto.UserDTO;
 import com.example.AulaDSW.dto.UserInsertDTO;
-import com.example.AulaDSW.entities.User;
+
 import com.example.AulaDSW.services.UserService;
 
 @RestController
@@ -30,8 +30,8 @@ public class UserResource {
 	private UserService service;
 	
 	@GetMapping
-	public ResponseEntity<List<User>> findAll() {
-		List<User> list = service.findAll();
+	public ResponseEntity<List<UserDTO>> findAll() {
+		List<UserDTO> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 	

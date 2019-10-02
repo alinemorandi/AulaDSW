@@ -25,7 +25,7 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;
 	
-	public List<User> findAll() {
+	public List<UserDTO> findAll() {
 		List<User> list = repository.findAll();
 		return list.stream().map(e -> new UserDTO(e)).collect(Collectors.toList());
 	}
