@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import com.example.AulaDSW.entities.User;
+import com.example.AulaDSW.services.UserUpdateValid;
 
 @UserUpdateValid
 public class UserDTO implements Serializable {
