@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.example.AulaDSW.services.exceptions.DatabaseException;
 import com.example.AulaDSW.services.exceptions.JWTAuthenticationException;
+import com.example.AulaDSW.services.exceptions.JWTAuthorizationException;
 import com.example.AulaDSW.services.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
@@ -22,7 +23,8 @@ public class ResourceExceptionHandler {
 	public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
 		String error = "Resource not found";
 		HttpStatus status = HttpStatus.NOT_FOUND;
-		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
+				request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
 
@@ -30,7 +32,8 @@ public class ResourceExceptionHandler {
 	public ResponseEntity<StandardError> database(DatabaseException e, HttpServletRequest request) {
 		String error = "Database error";
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
+				request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	
 }
@@ -39,9 +42,9 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e , HttpServletRequest request){
         String error = "Validation error";
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-        ValidationError err = new ValidationError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
-
-        for (FieldError x : e.getBindingResult().getFieldErrors() ){
+        ValidationError err = new ValidationError(Instant.now(), status.value(), error, e.getMessage(),
+				request.getRequestURI());
+		for (FieldError x : e.getBindingResult().getFieldErrors()) {
             err.addError(x.getField(), x.getDefaultMessage());
         }
 
@@ -52,7 +55,17 @@ public class ResourceExceptionHandler {
 	public ResponseEntity<StandardError> jWTAuthentication(JWTAuthenticationException e, HttpServletRequest request) {
 		String error = "Authentication error";
 		HttpStatus status = HttpStatus.UNAUTHORIZED;
-		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
+				request.getRequestURI());
+		return ResponseEntity.status(status).body(err);
+	}
+	
+	@ExceptionHandler(JWTAuthorizationException.class)
+	public ResponseEntity<StandardError> jwtAuthorization(JWTAuthorizationException e, HttpServletRequest request) {
+		String error = "Authentication error";
+		HttpStatus status = HttpStatus.FORBIDDEN;
+		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
+				request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
 }
