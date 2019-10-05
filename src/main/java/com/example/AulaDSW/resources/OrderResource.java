@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.AulaDSW.dto.OrderDTO;
-
 import com.example.AulaDSW.services.OrderService;
 
 @RestController
@@ -20,6 +20,7 @@ public class OrderResource {
 	@Autowired
 	private OrderService service;
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<OrderDTO>> findAll(){
 		List<OrderDTO> list = service.findAll();
@@ -32,5 +33,10 @@ public class OrderResource {
 		return ResponseEntity.ok().body(dto);
 	}
 	
+	@GetMapping(value = "/myorders")
+	public ResponseEntity<List<OrderDTO>> findByClient() {
+		List<OrderDTO> list = service.findByClient();
+		return ResponseEntity.ok().body(list);
+	}
 
 }
