@@ -67,4 +67,9 @@ public class AuthService {
 		}
 	}
 	
+	public TokenDTO refreshToken() {
+		User user = authenticated();
+		return new TokenDTO(user.getEmail(), jwtUtil.generateToken(user.getEmail()));
+	}
+	
 }
