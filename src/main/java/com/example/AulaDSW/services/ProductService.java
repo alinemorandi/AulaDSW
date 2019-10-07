@@ -27,18 +27,18 @@ import com.example.AulaDSW.services.exceptions.ResourceNotFoundException;
 public class ProductService {
 	
 	@Autowired
-	private ProductRepository repository;
+	private ProductRepository productRepository;
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
 	public Page<ProductDTO> findAllPaged(Pageable pageable) {
-		Page<Product> list = repository.findAll(pageable);
+		Page<Product> list = productRepository.findAll(pageable);
 		return list.map(e -> new ProductDTO(e));
 		}
 	
 	public ProductDTO findById(Long id) {
-		Optional<Product> obj = repository.findById(id);
+		Optional<Product> obj = productRepository.findById(id);
 		Product entity = obj.orElseThrow(() -> new ResourceNotFoundException(id));
 		return new ProductDTO(entity);
 	}
@@ -47,16 +47,16 @@ public class ProductService {
 	public ProductDTO insert(ProductCategoriesDTO dto){
 		Product entity = dto.toEntity();
 		setProductCategories(entity, dto.getCategories());
-		entity = repository.save(entity);
+		entity = productRepository.save(entity);
 		return new ProductDTO(entity);
 	}
 
 	@Transactional
 	public ProductDTO update(Long id, ProductCategoriesDTO dto){
 		try{
-			Product entity = repository.getOne(id); //Instancio um usuario baseado no id usando getOne
+			Product entity = productRepository.getOne(id); //Instancio um usuario baseado no id usando getOne
 			updateData(entity, dto); //atualizo os dados do usuario com base nos dto enviados na requisição
-			entity = repository.save(entity); //salvo no banco
+			entity = productRepository.save(entity); //salvo no banco
 			return new ProductDTO(entity); //converto
 		}catch(EntityNotFoundException e){
 			throw new ResourceNotFoundException(id);
@@ -76,7 +76,7 @@ public class ProductService {
 	
 	public void delete(Long id){
 		try{
-			repository.deleteById(id);
+			productRepository.deleteById(id);
 		}catch (EmptyResultDataAccessException e){
 			throw new  ResourceNotFoundException(id);
 		}catch (DataIntegrityViolationException e){
@@ -91,5 +91,36 @@ public class ProductService {
 			entity.getCategories().add(category);
 		}
 	}
+	
+	@Transactional
+	public Page<ProductDTO> findByCategoryPaged(Long categoryId, Pageable pageable) {
+		Category category = categoryRepository.getOne(categoryId);
+		Page<Product> products = productRepository.findByCategory(category, pageable);
+		return products.map(e -> new ProductDTO(e));
+	}
+	
+	@Transactional
+	public void addCategory(Long id, CategoryDTO dto) {
+		Product product = productRepository.getOne(id);
+		Category category = categoryRepository.getOne(dto.getId());
+		product.getCategories().add(category);
+		productRepository.save(product);
+	}
+
+	@Transactional
+	public void removeCategory(Long id, CategoryDTO dto) {
+		Product product = productRepository.getOne(id);
+		Category category = categoryRepository.getOne(dto.getId());
+		product.getCategories().remove(category);
+		productRepository.save(product);
+	}
+
+	@Transactional
+	public void setCategories(Long id, List<CategoryDTO> dto) {
+		Product product = productRepository.getOne(id);
+		setProductCategories(product, dto);
+		productRepository.save(product);
+	}
+
 
 }
