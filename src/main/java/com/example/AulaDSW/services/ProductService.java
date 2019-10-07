@@ -107,6 +107,7 @@ public class ProductService {
 		productRepository.save(product);
 	}
 
+	
 	@Transactional
 	public void removeCategory(Long id, CategoryDTO dto) {
 		Product product = productRepository.getOne(id);
@@ -122,5 +123,7 @@ public class ProductService {
 		productRepository.save(product);
 	}
 
+	
+	
 
 }
